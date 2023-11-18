@@ -6,6 +6,8 @@ require (
 	github.com/aws/aws-sdk-go v1.47.13
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.9.1
+	github.com/google/uuid v1.4.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -33,5 +35,4 @@ require (
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
