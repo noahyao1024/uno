@@ -13,6 +13,7 @@ type Option struct {
 
 type Response struct {
 	MessageID string
+	Digest    string
 }
 
 type Base interface {

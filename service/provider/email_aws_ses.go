@@ -1,7 +1,9 @@
 package provider
 
 import (
+	"crypto/md5"
 	"fmt"
+	"io"
 	"uno/service/subscriber"
 	"uno/service/template"
 
@@ -83,5 +85,12 @@ func (i *SESOfAWS) Send(ctx *gin.Context, subscriber *subscriber.Entry, template
 		return nil, fmt.Errorf("send email failed, message id is empty")
 	}
 
-	return &Response{MessageID: *sendEmailOutput.MessageId}, nil
+	h := md5.New()
+	io.WriteString(h, fmt.Sprintf("%s%s%s%s", template.Sender, template.Subject, template.Content, subscriber.Email))
+	digest := fmt.Sprintf("%x", h.Sum(nil))
+
+	return &Response{
+		Digest:    digest,
+		MessageID: *sendEmailOutput.MessageId,
+	}, nil
 }

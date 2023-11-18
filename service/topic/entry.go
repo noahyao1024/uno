@@ -23,7 +23,9 @@ func Create(entry *Entry) error {
 		return fmt.Errorf("entry is nil")
 	}
 
-	entry.ID = uuid.New().String()
+	if entry.ID == "" {
+		entry.ID = uuid.New().String()
+	}
 
 	bloc.Store(entry.ID, entry)
 

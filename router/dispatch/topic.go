@@ -1,7 +1,6 @@
 package dispatch
 
 import (
-	"fmt"
 	"uno/service/topic"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +16,7 @@ func TopicCreate(ctx *gin.Context) {
 
 	topic.Create(entry)
 
-	fmt.Println(entry)
+	ctx.JSON(200, gin.H{"message": "ok", "topic": entry})
 }
 
 func TopicGet(ctx *gin.Context) {
