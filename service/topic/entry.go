@@ -29,6 +29,9 @@ func Create(entry *Entry) error {
 
 	go func() {
 		// TODO prepare data for internal channel of subscribers
+		for _, subscriber := range entry.Subscribers {
+			subscriber.Detail()
+		}
 	}()
 
 	return nil

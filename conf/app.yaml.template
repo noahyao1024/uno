@@ -1,4 +1,15 @@
 ---
+apis:
+  access_token:
+    host: ""
+    path: ""
+    app_id: ""
+    app_secret: ""
+  
+  subscriber_info:
+    host: ""
+    path: ""
+
 provider:
   email_ses:
     region: ""
