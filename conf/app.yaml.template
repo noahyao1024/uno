@@ -1,0 +1,13 @@
+---
+provider:
+  email_ses:
+    region: ""
+    access: ""
+    secret: ""
+
+template:
+  email:
+    hello:
+      sender: "noreply@world.com"
+      subject: "NoReply"
+      file: hello.html
