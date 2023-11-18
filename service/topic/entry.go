@@ -30,8 +30,14 @@ func Create(entry *Entry) error {
 	go func() {
 		// TODO prepare data for internal channel of subscribers
 		for _, subscriber := range entry.Subscribers {
-			subscriber.Detail()
+			err := subscriber.Detail()
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
 		}
+
+		entry.Status = 1
 	}()
 
 	return nil
