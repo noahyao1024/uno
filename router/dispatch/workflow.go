@@ -55,22 +55,22 @@ func WorkflowCreate(ctx *gin.Context) {
 		provider.SetOption(ctx, nil)
 	}
 
-	sentCount := 0
+	successCount := 0
+	failureCount := 0
 
 	// . Send the message.
 	for _, subscriber := range topic.Subscribers {
 		for _, provider := range providers {
-			tpl, err := template.Get(workflow.TemplateID, map[string]string{"hello": "world"})
+			tpl, err := template.Get(workflow.TemplateID, map[string]string{"year": time.Now().Format("2006")})
 			if err != nil {
 				fmt.Println(err)
 				continue
 			}
 
-			digest := provider.Digest(subscriber, tpl)
 			msg := &message.Entry{}
-			database.GetWriteDB().Select("id").Where("digest = ?", digest).First(msg)
+			database.GetWriteDB().Select("*").Where("channel_identifier = ?", subscriber.Email).First(msg)
 			if msg.ID != "" {
-				fmt.Println("message already sent", msg.ID, msg.Digest)
+				fmt.Println("message already sent", msg.ID, msg.Digest, msg.ChannelIdentifier)
 				continue
 			}
 
@@ -90,8 +90,10 @@ func WorkflowCreate(ctx *gin.Context) {
 				msg.ChannelMessageID = providerResponse.MessageID
 				msg.Digest = providerResponse.Digest
 				msg.Status = 1
+				failureCount++
 			} else {
 				msg.Status = 0
+				successCount++
 			}
 
 			msg.Channel = "aws_email_ses"
@@ -105,5 +107,5 @@ func WorkflowCreate(ctx *gin.Context) {
 
 	// . Mark the subscriber result.
 
-	ctx.JSON(200, gin.H{"message": "ok", "workflow": workflow, "sent_cnt": sentCount})
+	ctx.JSON(200, gin.H{"message": "ok", "workflow": workflow, "success_cnt": successCount, "failure_cnt": failureCount})
 }
