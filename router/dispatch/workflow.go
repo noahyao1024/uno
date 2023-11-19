@@ -10,9 +10,11 @@ import (
 	"uno/service/topic"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Workflow struct {
+	ID         string `json:"id,omitempty"`
 	TopicID    string `json:"topic_id,omitempty"`
 	TemplateID string `json:"template_id,omitempty"`
 }
@@ -24,6 +26,8 @@ func WorkflowCreate(ctx *gin.Context) {
 		ctx.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
+
+	workflow.ID = uuid.New().String()
 
 	// . Read topic.
 	topic, _ := topic.Get(workflow.TopicID)
@@ -72,10 +76,11 @@ func WorkflowCreate(ctx *gin.Context) {
 				fmt.Printf("failed to send message: %v\n", err)
 			}
 
-			msg.ID = providerResponse.MessageID
+			msg.ID = uuid.New().String()
 			msg.UserID = subscriber.UserID
 			msg.Digest = providerResponse.Digest
 			msg.Channel = "aws_email_ses"
+			msg.ChannelMessageID = providerResponse.MessageID
 			msg.ChannelIdentifier = subscriber.Email
 			if database.GetWriteDB().Create(msg).Error != nil {
 				fmt.Printf("failed to create message: %v\n", msg)

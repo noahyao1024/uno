@@ -8,6 +8,7 @@ type Entry struct {
 	Digest            string `json:"digest,omitempty"`
 	CreatedAt         string `json:"created_at,omitempty"`
 	Channel           string `json:"channel,omitempty"`
+	ChannelMessageID  string `json:"channel_message_id,omitempty"`
 	ChannelIdentifier string `json:"channel_identifier,omitempty"`
 }
 
