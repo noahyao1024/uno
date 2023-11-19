@@ -18,6 +18,13 @@ var ServerInstance = &Server{
 }
 
 type App struct {
+	APIs map[string]struct {
+		Host      string `yaml:"host,omitempty"`
+		Path      string `yaml:"path,omitempty"`
+		AppID     string `yaml:"app_id,omitempty"`
+		AppSecret string `yaml:"app_secret,omitempty"`
+	} `yaml:"apis,omitempty"`
+
 	Provider struct {
 		EmailSES struct {
 			Region string `yaml:"region,omitempty"`

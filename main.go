@@ -2,15 +2,17 @@ package main
 
 import (
 	"fmt"
+	"uno/pkg/database"
 	"uno/pkg/setting"
-	"uno/pkg/util"
 	"uno/router"
+	"uno/util"
 
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 )
 
 func init() {
+	database.Setup()
 	util.Setup()
 }
 

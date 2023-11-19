@@ -18,8 +18,10 @@ func Setup() *gin.Engine {
 		go time.Sleep(10 * time.Second)
 	})
 
-	r.Any("/v1/topic", dispatch.TopicCreate)
-	r.Any("/v1/workflow", dispatch.WorkflowCreate)
+	r.GET("/v1/topic/:id", dispatch.TopicGet)
+	r.POST("/v1/topic", dispatch.TopicCreate)
+
+	r.POST("/v1/workflow", dispatch.WorkflowCreate)
 
 	return r
 }
