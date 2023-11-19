@@ -2,7 +2,9 @@ package dispatch
 
 import (
 	"fmt"
+	"uno/pkg/database"
 	"uno/pkg/setting"
+	"uno/service/message"
 	"uno/service/provider"
 	"uno/service/template"
 	"uno/service/topic"
@@ -57,9 +59,26 @@ func WorkflowCreate(ctx *gin.Context) {
 				continue
 			}
 
+			digest := provider.Digest(subscriber, tpl)
+			msg := &message.Entry{}
+			database.GetWriteDB().Select("id").Where("digest = ?", digest).First(msg)
+			if msg.ID != "" {
+				fmt.Println("message already sent", msg.ID, msg.Digest)
+				continue
+			}
+
 			providerResponse, err := provider.Send(ctx, subscriber, tpl)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Printf("failed to send message: %v\n", err)
+			}
+
+			msg.ID = providerResponse.MessageID
+			msg.UserID = subscriber.UserID
+			msg.Digest = providerResponse.Digest
+			msg.Channel = "aws_email_ses"
+			msg.ChannelIdentifier = subscriber.Email
+			if database.GetWriteDB().Create(msg).Error != nil {
+				fmt.Printf("failed to create message: %v\n", msg)
 			}
 
 			fmt.Println(subscriber.Email, subscriber.UserID, "message_id", providerResponse.MessageID, "digest", providerResponse.Digest)

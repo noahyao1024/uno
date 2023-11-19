@@ -33,6 +33,12 @@ func (i *SESOfAWS) SetOption(ctx *gin.Context, o *Option) error {
 	return nil
 }
 
+func (i *SESOfAWS) Digest(subscriber *subscriber.Entry, template *template.Entry) string {
+	h := md5.New()
+	io.WriteString(h, fmt.Sprintf("%s%s%s%s", template.Sender, template.Subject, template.Content, subscriber.Email))
+	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
 func (i *SESOfAWS) Send(ctx *gin.Context, subscriber *subscriber.Entry, template *template.Entry) (*Response, error) {
 	if len(subscriber.Email) == 0 {
 		return nil, fmt.Errorf("subscriber email is empty")
@@ -85,12 +91,8 @@ func (i *SESOfAWS) Send(ctx *gin.Context, subscriber *subscriber.Entry, template
 		return nil, fmt.Errorf("send email failed, message id is empty")
 	}
 
-	h := md5.New()
-	io.WriteString(h, fmt.Sprintf("%s%s%s%s", template.Sender, template.Subject, template.Content, subscriber.Email))
-	digest := fmt.Sprintf("%x", h.Sum(nil))
-
 	return &Response{
-		Digest:    digest,
+		Digest:    i.Digest(subscriber, template),
 		MessageID: *sendEmailOutput.MessageId,
 	}, nil
 }
