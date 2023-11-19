@@ -77,6 +77,7 @@ func WorkflowCreate(ctx *gin.Context) {
 			}
 
 			msg.ID = uuid.New().String()
+			msg.WorkflowID = workflow.ID
 			msg.UserID = subscriber.UserID
 			msg.Digest = providerResponse.Digest
 			msg.Channel = "aws_email_ses"
