@@ -2,6 +2,7 @@ package dispatch
 
 import (
 	"fmt"
+	"time"
 	"uno/pkg/database"
 	"uno/pkg/setting"
 	"uno/service/message"
@@ -83,6 +84,8 @@ func WorkflowCreate(ctx *gin.Context) {
 			msg.Channel = "aws_email_ses"
 			msg.ChannelMessageID = providerResponse.MessageID
 			msg.ChannelIdentifier = subscriber.Email
+			msg.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+			msg.Status = 1
 			if database.GetWriteDB().Create(msg).Error != nil {
 				fmt.Printf("failed to create message: %v\n", msg)
 			}
