@@ -74,23 +74,29 @@ func WorkflowCreate(ctx *gin.Context) {
 				continue
 			}
 
+			var failed bool
+
 			providerResponse, err := provider.Send(ctx, subscriber, tpl)
 			if err != nil {
 				fmt.Printf("failed to send message: %v\n", err)
-				continue
+				failed = true
 			}
-
-			sentCount++
 
 			msg.ID = uuid.New().String()
 			msg.WorkflowID = workflow.ID
 			msg.UserID = subscriber.UserID
-			msg.Digest = providerResponse.Digest
+
+			if !failed {
+				msg.ChannelMessageID = providerResponse.MessageID
+				msg.Digest = providerResponse.Digest
+				msg.Status = 1
+			} else {
+				msg.Status = 0
+			}
+
 			msg.Channel = "aws_email_ses"
-			msg.ChannelMessageID = providerResponse.MessageID
 			msg.ChannelIdentifier = subscriber.Email
 			msg.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
-			msg.Status = 1
 			if database.GetWriteDB().Create(msg).Error != nil {
 				fmt.Printf("failed to create message: %v\n", msg)
 			}
