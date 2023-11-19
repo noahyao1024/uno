@@ -100,8 +100,6 @@ func WorkflowCreate(ctx *gin.Context) {
 			if database.GetWriteDB().Create(msg).Error != nil {
 				fmt.Printf("failed to create message: %v\n", msg)
 			}
-
-			fmt.Println(subscriber.Email, subscriber.UserID, "message_id", providerResponse.MessageID, "digest", providerResponse.Digest)
 		}
 	}
 
