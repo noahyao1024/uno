@@ -113,5 +113,9 @@ func (e *Entry) Detail() error {
 		}
 	}
 
+	if len(e.Email) == 0 {
+		return fmt.Errorf("email not found")
+	}
+
 	return nil
 }

@@ -77,6 +77,7 @@ func WorkflowCreate(ctx *gin.Context) {
 			providerResponse, err := provider.Send(ctx, subscriber, tpl)
 			if err != nil {
 				fmt.Printf("failed to send message: %v\n", err)
+				continue
 			}
 
 			sentCount++
