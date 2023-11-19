@@ -66,6 +66,13 @@ func (e *Entry) token() (string, error) {
 }
 
 func (e *Entry) Detail() error {
+	dbEntry := &Entry{}
+	database.GetWriteDB().Where("user_id = ?", e.UserID).First(dbEntry)
+	if dbEntry.Email != "" {
+		e.Email = dbEntry.Email
+		return nil
+	}
+
 	token, err := e.token()
 	if err != nil {
 		return err
