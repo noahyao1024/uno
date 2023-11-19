@@ -90,10 +90,10 @@ func WorkflowCreate(ctx *gin.Context) {
 				msg.ChannelMessageID = providerResponse.MessageID
 				msg.Digest = providerResponse.Digest
 				msg.Status = 1
-				failureCount++
+				successCount++
 			} else {
 				msg.Status = 0
-				successCount++
+				failureCount++
 			}
 
 			msg.Channel = "aws_email_ses"
