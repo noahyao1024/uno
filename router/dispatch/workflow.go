@@ -55,6 +55,8 @@ func WorkflowCreate(ctx *gin.Context) {
 		provider.SetOption(ctx, nil)
 	}
 
+	sentCount := 0
+
 	// . Send the message.
 	for _, subscriber := range topic.Subscribers {
 		for _, provider := range providers {
@@ -77,6 +79,8 @@ func WorkflowCreate(ctx *gin.Context) {
 				fmt.Printf("failed to send message: %v\n", err)
 			}
 
+			sentCount++
+
 			msg.ID = uuid.New().String()
 			msg.WorkflowID = workflow.ID
 			msg.UserID = subscriber.UserID
@@ -95,4 +99,6 @@ func WorkflowCreate(ctx *gin.Context) {
 	}
 
 	// . Mark the subscriber result.
+
+	ctx.JSON(200, gin.H{"message": "ok", "workflow": workflow, "sent_cnt": sentCount})
 }
