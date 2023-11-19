@@ -31,12 +31,13 @@ func Create(entry *Entry) error {
 
 	go func() {
 		// TODO prepare data for internal channel of subscribers
-		for _, subscriber := range entry.Subscribers {
+		for idx, subscriber := range entry.Subscribers {
 			err := subscriber.Detail()
 			if err != nil {
-				fmt.Println(err)
 				continue
 			}
+
+			fmt.Println("done subscriber", idx+1)
 		}
 
 		entry.Status = 1
