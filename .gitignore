@@ -1,6 +1,12 @@
 # Binaries
 uno
+
+# Data
 data/db/gorm.db
+data/user.list
+
+# Template
+data/template
 
 # Credentials
 conf/app.yaml

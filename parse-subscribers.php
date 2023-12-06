@@ -1,6 +1,6 @@
 <?php
 
-$filename = '';
+$filename = 'data/user.list';
 
 
 $subscriber = [];
